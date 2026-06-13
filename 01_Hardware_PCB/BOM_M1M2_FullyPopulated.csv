@@ -1,0 +1,63 @@
+Reference,Final_Value,Footprint,Quantity,Additional_Info,Explanation
+"C1, C5, C7, C17, C20, C22, C29, C31, C33, C51",220uF/50V,CAP-P-1W,10,,Bulk capacitance for 24V input filtering and smoothing the output of all five buck regulators.
+"C2, C4, C6, C11, C12, C14, C16, C18, C19, C21, C23, C26, C27, C28, C30, C32, C34, C35, C36, C39, C40, C41, C43, C44, C46, C52, C54, C57, C58, C61, C63, C64",104,C-1206,32,,0.1uF high-frequency decoupling capacitors distributed across all logic ICs and regulator feedback nodes to filter high-frequency noise.
+"C3, C42, C47, C53, C62",106,C-1206,5,,10uF mid-frequency decoupling capacitors to stabilize local voltage dips near the microcontrollers.
+"C8, C9, C15, C24, C25, C37, C38, C55, C56",1000uF/16V,CAP-P-2,9,,Massive bulk capacitance required to absorb heavy localized inductive current spikes from the motor channels and logic.
+"C10, C13",104,CAP-NP-1,2,,Non-polarized line filtering capacitors across the main 24V input and common-mode choke.
+"C45, C50",101,C-1206,2,,100pF debouncing capacitors for the hardware reset switches to ensure clean reset signaling.
+"C48, C49, C59, C60, C65, C66",22pF,C-1206,6,,Load capacitors for the three Pierce oscillators ensuring the required 180-degree phase shift for the hardware clocks.
+C67,4n7,C-1206,1,,4.7nF high-voltage filter capacitor for the USB shield/ground tying.
+D1,M1,L-1206,1,,LED indicating localized power is active for Motor Channel 1.
+"D2, D5, D14, D17, D22",SS24,SMB,5,,Schottky diodes. D5 provides core reverse-polarity protection; the others isolate the motor regulators from the main VBB rail.
+"D3, D4, D25, D26",TX RX,L-1206,4,"D3: TX, D4: RX, D25: RX, D26: TX",LEDs to visually indicate serial data transmission and reception on the network buses.
+D6,POWER,L-1206,1,,LED to indicate the presence of the 5V logic power rail.
+D7,SMAJ24V,SMA,1,,TVS Diode to clamp and absorb incoming high-voltage transients on the 24V supply line.
+"D8, D9, D15, D18, D24",SS34,SMA,5,,Freewheeling (flyback) Schottky diodes crucial for the switching operation of the five LM2576 buck regulators.
+"D10, D20, D23",SMAJ5V,SMA,3,,5V TVS diodes to clamp voltage spikes on logic-level interface lines.
+D11,20V,ZDiode-3,1,,Zener diode establishing the 20V threshold for the Under-Voltage Lockout (UVLO) circuit.
+D12,PSM712,SOT23,1,,Specialized TVS array providing critical ESD and fault protection for the external RS485 differential lines.
+D13,M2,L-1206,1,,LED indicating localized power is active for Motor Channel 2.
+D16,M3,L-1206,1,,LED indicating localized power is active for Motor Channel 3.
+"D19, D27, D28",M7,SMA,3,,Standard rectifiers managing the USB 5V backup power routing and general logic isolation.
+D21,M4,L-1206,1,,LED indicating localized power is active for Motor Channel 4.
+F1,Fuse,FUSE,1,F1: 1A,1-Amp physical fuse protecting the fragile 5V logic subsystems from overcurrent faults.
+"H1, H2",H_1X6,Header-01X06,2,,6-pin ICSP/UART headers dedicated to serial flashing and localized debugging of the microcontrollers.
+"H3, H4",LORA,Header-01X07,2,,7-pin headers dedicated to interfacing with external LoRa wireless transceiver modules.
+J1,DWIN,STD-04-3.55MM,1,J1: H4,RS485 interface port specifically assigned for an external DWIN HMI touchscreen.
+J2,ON/OFF,PLG-02-B,1,J2: H2,2-pin connector for a physical hardware power toggle switch.
+J3,MOTOR1,PLG-03-B,1,J3: H3,3-pin connector (GND/9V/PWM) for Motor channel 1.
+J4,PWR 24V,PLG-02-B,1,J4: H2,The primary 24V DC power input connector.
+J5,S1,STD-04-3.55MM,1,J5: H4,RS485 network interface for external sensor node 1.
+J6,S2,STD-04-3.55MM,1,J6: H4,RS485 network interface for external sensor node 2.
+J7,MOTOR2,PLG-03-B,1,J7: H3,3-pin connector (GND/9V/PWM) for Motor channel 2.
+J8,S3,STD-04-3.55MM,1,J8: H4,RS485 network interface for external sensor node 3.
+J9,S4,STD-04-3.55MM,1,J9: H4,RS485 network interface for external sensor node 4.
+J10,MOTOR3,PLG-03-B,1,J10: H3,3-pin connector (GND/9V/PWM) for Motor channel 3.
+J11,MOTOR4,PLG-03-B,1,J11: H3,3-pin connector (GND/9V/PWM) for Motor channel 4.
+J12,USB type B,USB-Type-B,1,J12: *,PC interface port for localized USB serial communication and firmware flashing.
+"L1, L2, L3, L4, L5",100uH,L_9X12,5,,Power inductors storing and releasing magnetic energy for the five switching buck regulators.
+LS1,Buzzer,Buzzer,1,LS1: BUZ,Audio transducer for localized UI feedback or alarms.
+M1,Atmega128-SMD,Quad64,1,,The core actuation processor responsible for PWM motor control and reading the local UI.
+M2,Atmega128-SMD,Quad64,1,,The core communications processor managing the RS485 USB and LoRa data routing.
+M3,CH340,SOIC-16,1,,USB-to-Serial converter bridging PC data to M2's UART port.
+"Q1, Q2",NPN,SOT23,2,"Q1: 546, Q2: 546",Transistors. Q1 controls the UVLO power gating; Q2 acts as the driver for the buzzer.
+"R1, R2, R3, R8, R15, R17, R18, R22, R36, R41, R42",1K,R-1206,11,,Base resistors for transistors and current limiting resistors for indicator LEDs.
+"R4, R7, R9, R16, R20, R21, R23, R24, R28, R29, R30, R31, R33, R37, R40",10K,R-1206,15,,Broad use pull-up resistors (for reset lines / tactile buttons / RS485 logic) and regulator feedback nodes.
+"R5, R19, R27, R39",62K,R-1206,4,,The high-side resistors in the voltage dividers that set the motor regulators output to ~8.85V.
+"R6, R14",4K7,R-1206,2,,Failsafe biasing resistors to keep the RS485 bus in a known high state when no nodes are transmitting.
+"R10, R12",47,R-1206,2,,Series termination resistors on the RS485 A/B lines to prevent signal reflection.
+"R11, R13",JZ,R-1206,2,,Zero-ohm jumper resistors used specifically to bridge copper traces over other routing paths.
+"R25, R26, R32, R34",100,R-1206,4,,Series current-limiting resistors protecting the tactile UI buttons from short-circuits.
+"R35, R38, R43",1M,R-1206,3,,Parallel feedback resistors for the three crystal oscillators to ensure reliable clock startup.
+SW1,SW-DIP01,SW-DIP-01,1,SW1: PRG,DIP switch to physically isolate the USB serial bridge from the internal UART bus to prevent data collisions.
+SW2,SET,SW-SPST-4-B,1,SW2: M3,Tactile pushbutton for local hardware user interface (SET).
+SW3,UP,SW-SPST-4-B,1,SW3: M1,Tactile pushbutton for local hardware user interface (UP).
+SW4,DOWN,SW-SPST-4-B,1,SW4: M2,Tactile pushbutton for local hardware user interface (DOWN).
+SW5,ENTER,SW-SPST-4-B,1,SW5: M4,Tactile pushbutton for local hardware user interface (ENTER).
+"SW6, SW7",RESET,SW-SPST-4,2,,Hardware reset buttons for the M1 and M2 microcontrollers.
+T1,CM Trans,CM_UU9.8,1,T1: *,Common-mode choke to filter out high-frequency switching noise from the incoming 24V supply.
+U1,MAX487,SOIC_8,1,,Half-duplex RS485 transceiver driving the long-distance differential network.
+"VR1, VR3, VR4, VR5",LM2576-ADJ,TO263_5,4,"VR1: *, VR3: *, VR4: *, VR5: *",Adjustable switching buck regulators generating independent power rails for each of the four motors.
+VR2,LM2576-5V,TO263_5,1,VR2: *,Fixed 5V switching buck regulator powering all localized logic and microcontrollers.
+"Y1, Y2",Crystal 16 MHz,Crystal 16MHz DIP Code = ABL-16.000MHZ-B2,2,,Main hardware clock sources for the M1 and M2 microcontrollers.
+Y3,Crystal 12 MHz,Crystal 12MHz DIP Code = 3155-12M20P2/49US-ND,1,,Dedicated hardware clock source for the CH340 USB bridge chip.

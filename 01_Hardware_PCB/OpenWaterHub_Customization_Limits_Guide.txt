@@ -1,0 +1,95 @@
+======================================================================
+           OPEN-SOURCE CUSTOMIZATION & SYSTEM LIMITS GUIDE
+======================================================================
+This board features a bifurcated architecture (MCU M1 = Motors, MCU M2 = Comms). 
+Below are the hard hardware limits and the supported customization paths.
+
+[1] HARD SYSTEM LIMITS (DO NOT EXCEED)
+----------------------------------------------------------------------
+* ABSOLUTE MAX INPUT VOLTAGE: ~26V DC. 
+  The TVS Diode (D7) is an SMAJ24V. Sustained input voltages above 26V 
+  will cause D7 to shunt to ground, blowing the main fuse or the diode.
+* LOGIC CURRENT LIMIT: 1.0 Amp. 
+  The 5V regulator (VR2) and all logic/comms are protected by fuse F1. 
+  Do not attempt to draw heavy auxiliary 5V power from the headers.
+* MOTOR CURRENT LIMIT: 3.0 Amps per channel (12A Total). 
+  This is a hard silicon limit baked into the LM2576-ADJ regulators 
+  (VR1, VR3, VR4, VR5). The flyback diodes (SS34) and inductors are 
+  also strictly rated for 3A. You CANNOT increase this via firmware.
+
+[2] POWER SUPPLY CUSTOMIZATIONS
+----------------------------------------------------------------------
+* ADJUSTING MOTOR VOLTAGE (Currently ~8.85V): 
+  The LM2576-ADJ regulators are set via resistor dividers. To change 
+  a motor's voltage, swap its high-side (R_top) 62K resistor.
+  Formula: V_out = 1.23V * (1 + (R_top / 10K)).
+  - Motor 1 (VR1): Change R5
+  - Motor 2 (VR3): Change R19
+  - Motor 3 (VR4): Change R27
+  - Motor 4 (VR5): Change R39
+
+* CHANGING THE MAIN SYSTEM TO 12V:
+  The board is factory-locked to a 20V minimum input by the Under-
+  Voltage Lockout (UVLO) circuit. To run the board off a 12V supply, 
+  you MUST physically replace Zener diode D11 (20V) with a 9V or 10V 
+  Zener diode.
+
+[3] SENSOR NETWORKING (12V vs 24V RS485 SENSORS)
+----------------------------------------------------------------------
+The 4-pin RS485 sensor ports (J5, J6, J8, J9) and the DWIN port (J1) 
+route the raw 'VIN' power net to Pin 4 to power external nodes. 
+There is NO dedicated 12V regulator on this board.
+* If you supply 24V to the main input (J4), the sensors receive 24V.
+* If you want to use strictly 12V RS485 sensors, you MUST:
+  1. Swap the D11 UVLO diode to 10V (as detailed above).
+  2. Power the entire board via a 12V main power supply. 
+  (Note: Supplying 12V main power means your motor regulators can 
+  now only output a maximum of ~10.5V due to voltage dropout).
+
+[4] MCU COMMUNICATION & ISOLATION
+----------------------------------------------------------------------
+M1 (Motors) and M2 (Comms) have NO physical copper data traces linking 
+them. They are designed to communicate wirelessly via dual LoRa modules 
+(H3 & H4). 
+* To establish a wired link, you must manually run jumper wires 
+  between programming headers H1 and H2. 
+* Turn SW1 OFF to disconnect M2's USB bridge and prevent data collisions 
+  if routing UART over the H1/H2 pins.
+======================================================================
+
+======================================================================
+             AUXILIARY GPIO & SMART POWER GATING
+======================================================================
+[1] THE M2 "SMART VALVE" PIN (PB1)
+----------------------------------------------------------------------
+Header H1 (M2 Programming/UART) exposes MCU pin PB1 on Pin 5. This 
+pin is electrically isolated from the core network and is completely 
+free for custom Digital I/O logic.
+
+* RECOMMENDED MODIFICATION (SENSOR POWER GATING): 
+  Industrial RS485 sensors draw heavy quiescent current even when idle. 
+  Route a jumper wire from H1 Pin 5 (PB1) to the signal pin of an 
+  external 5V-triggered P-Channel MOSFET or DC Solid-State Relay (SSR). 
+  Splice the relay into the 24V line feeding the sensor headers. M2 
+  can now toggle PB1 HIGH to wake the network, and LOW to cut power.
+
+* ⚠️ CRITICAL SAFETY WARNING (NO N-CHANNEL / LOW-SIDE SWITCHES): 
+  If you build an external power gate, you MUST use HIGH-SIDE switching 
+  (cutting the 24V line). Do NOT use cheap N-Channel MOSFETs to cut 
+  the Ground wire. Cutting the Ground will force the 24V return current 
+  backwards through the RS485 data lines, instantly destroying U1 and M2.
+
+[2] OTHER AVAILABLE EXTENSION PINS
+----------------------------------------------------------------------
+* M1 AUXILIARY I/O: 
+  Header H2 (M1 Programming/UART) exposes a mirrored free GPIO on Pin 5. 
+  This can be used by M1 to trigger external cooling fans, safety 
+  contactors, or secondary indicator lights.
+
+* THE HIDDEN I²C BUS (Pins 25 & 26): 
+  The ATmega128 hardware I²C pins (PD0/SCL and PD1/SDA) on both M1 
+  and M2 were left floating (unrouted). Advanced users can micro-solder 
+  magnet wire directly to these legs, add 4.7K pull-up resistors, and 
+  establish a high-speed, collision-free internal communication bus 
+  between the Actuation and Network domains.
+======================================================================

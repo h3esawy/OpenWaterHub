@@ -1,0 +1,33 @@
+Reference,Final_Value,Footprint,Quantity,Additional_Info,Explanation
+"C1, C5, C7, C20, C22, C31, C51",220uF/50V,CAP-P-1W,7,,Bulk capacitance for core 5V input and four motor channels.
+"C2, C4, C19, C26, C35, C36, C46, C61",104,C-1206,8,,High-frequency decoupling for the core power and M1 logic circuits.
+"C3, C47, C62",106,C-1206,3,,Mid-frequency decoupling capacitors.
+"C8, C9, C24, C25, C37, C38, C55, C56",1000uF/16V,CAP-P-2,8,,Massive bulk capacitance to absorb heavy current spikes from the four motor outputs.
+"C10, C13",104,CAP-NP-1,2,,Primary line noise filtering across the 24V input.
+C50,101,C-1206,1,,Hardware reset button debouncing capacitor.
+"C59, C60",22pF,C-1206,2,,Pierce oscillator load capacitors to satisfy phase shift for M1's 16MHz crystal.
+"D1, D6, D13, D16, D21",LED,L-1206,5,"D6: PWR, D1/D13/D16/D21: Motors",Visual indication for core power (D6) and active motor channels.
+"D2, D5, D14, D17, D22",SS24,SMB,5,,Schottky diodes. D5 provides core reverse-polarity protection; the others isolate the motor regulators.
+D7,SMAJ24V,SMA,1,,TVS Diode to clamp and absorb incoming voltage spikes from the 24V supply.
+"D8, D9, D15, D18, D24",SS34,SMA,5,,Freewheeling (flyback) diodes for the five LM2576 buck regulators.
+D11,20V,ZDiode-3,1,,Zener diode for the Under-Voltage Lockout (UVLO) circuit. Prevents booting under 20V.
+F1,Fuse,FUSE,1,1A,1-Amp physical fuse protecting the fragile 5V logic subsystems.
+H2,H_1X6,Header-01X06,1,,ICSP/UART programming header for flashing M1.
+H4,LORA,Header-01X07,1,,Dedicated header for M1's LoRa wireless module.
+"J2, J4",PWR,PLG-02-B,2,,Main 24V power input and toggle switch connector.
+"J3, J7, J10, J11",MOTOR,PLG-03-B,4,,Outputs for the 4 independent smart motor channels.
+"L1, L2, L3, L4, L5",100uH,L_9X12,5,,Energy storage inductors for the core 5V regulator and the four motor regulators.
+LS1,Buzzer,Buzzer,1,,Audio feedback transducer for user interface interaction.
+M1,Atmega128-SMD,Quad64,1,,The core actuation processor responsible for PWM motor control and reading the UI.
+"Q1, Q2",NPN,SOT23,2,,Q1 acts as the UVLO gate; Q2 drives the buzzer.
+"R3, R8, R15, R17, R18, R22, R36",1K,R-1206,7,,"Current limiting resistors for the LEDs, base resistor for transistors."
+"R7, R9, R16, R20, R21, R23, R24, R28, R30, R31, R37, R40",10K,R-1206,12,,"Pull-up resistors for the tactile UI buttons and M1 reset, plus UVLO and voltage feedback nodes."
+"R5, R19, R27, R39",62K,R-1206,4,,The top half of the voltage divider setting the motor regulators to ~8.85V.
+"R25, R26, R32, R34",100,R-1206,4,,Series protection resistors for the four tactile UI buttons.
+R38,1M,R-1206,1,,Feedback resistor parallel to the crystal to ensure stable oscillation.
+"SW2, SW3, SW4, SW5",SW-SPST,SW-SPST-4-B,4,,"Physical tactile buttons for local user interface (Set, Up, Down, Enter)."
+SW7,RESET,SW-SPST-4,1,,Hardware reset button dedicated to M1.
+T1,CM Trans,CM_UU9.8,1,,Common-mode choke isolating the sensitive 5V logic from motor switching noise.
+"VR1, VR3, VR4, VR5",LM2576-ADJ,TO263_5,4,,Four adjustable buck regulators providing independent power rails to the motors.
+VR2,LM2576-5V,TO263_5,1,,Fixed 5V buck regulator powering M1 and all logic-level components.
+Y2,Crystal 16 MHz,Crystal,1,,Hardware timing crystal for M1.
