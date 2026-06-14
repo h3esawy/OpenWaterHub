@@ -10406,6 +10406,18 @@
 		)
 		(uuid "1af14117-be87-499d-b4e4-62b752d285a1")
 	)
+	(text "\n===================================\nAUXILIARY GPIO & SMART POWER GATING\n==================================="
+		(exclude_from_sim no)
+		(at 514.35 301.498 0)
+		(effects
+			(font
+				(size 2.032 2.032)
+				(thickness 0.4064)
+				(bold yes)
+			)
+		)
+		(uuid "3881dad8-9817-414a-b7e2-aee3c9ae7a95")
+	)
 	(text "U1: RS485 TRANSCEIVER (MAX487)"
 		(exclude_from_sim no)
 		(at 642.874 15.24 0)
@@ -10489,6 +10501,16 @@
 			)
 		)
 		(uuid "df963fd0-a41e-4228-8019-f46c2b296cfc")
+	)
+	(text "\n[1] THE M2 \"SMART VALVE\" PIN (PB1)\n----------------------------------------------------------------------\nHeader H1 (M2 Programming/UART) exposes MCU pin PB1 on Pin 5. This \npin is electrically isolated from the core network and is completely \nfree for custom Digital I/O logic.\n\n* RECOMMENDED MODIFICATION (SENSOR POWER GATING): \n  Industrial RS485 sensors draw heavy quiescent current even when idle. \n  Route a jumper wire from H1 Pin 5 (PB1) to the signal pin of an \n  external 5V-triggered P-Channel MOSFET or DC Solid-State Relay (SSR). \n  Splice the relay into the 24V line feeding the sensor headers. M2 \n  can now toggle PB1 HIGH to wake the network, and LOW to cut power.\n\n* ⚠️ CRITICAL SAFETY WARNING (NO N-CHANNEL / LOW-SIDE SWITCHES): \n  If you build an external power gate, you MUST use HIGH-SIDE switching \n  (cutting the 24V line). Do NOT use cheap N-Channel MOSFETs to cut \n  the Ground wire. Cutting the Ground will force the 24V return current \n  backwards through the RS485 data lines, instantly destroying U1 and M2.\n\n[2] OTHER AVAILABLE EXTENSION PINS\n----------------------------------------------------------------------\n* M1 AUXILIARY I/O: \n  Header H2 (M1 Programming/UART) exposes a mirrored free GPIO on Pin 5. \n  This can be used by M1 to trigger external cooling fans, safety \n  contactors, or secondary indicator lights.\n\n* THE HIDDEN I²C BUS (Pins 25 & 26): \n  The ATmega128 hardware I²C pins (PD0/SCL and PD1/SDA) on both M1 \n  and M2 were left floating (unrouted). Advanced users can micro-solder \n  magnet wire directly to these legs, add 4.7K pull-up resistors, and \n  establish a high-speed, collision-free internal communication bus \n  between the Actuation and Network domains.\n======================================================================"
+		(exclude_from_sim no)
+		(at 515.112 344.17 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+		(uuid "dfa5fbec-6318-4c54-9696-54a1362ca60a")
 	)
 	(text_box "Function: Prevents the 5V logic rail (VR2) from booting if the input voltage drops below safe operational levels, protecting M1/M2 from brown-out memory corruption.\n\nCUSTOMIZATION: The boot threshold is physically determined by the Zener Diode D11 (Currently a 20V Zener). To adapt this board for a 12V industrial system, replace D11 with a 9V or 10V Zener diode."
 		(exclude_from_sim no)
